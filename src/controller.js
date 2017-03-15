@@ -1,52 +1,50 @@
-class  controllerHolder{
+class  ControllerHolder{
 	constructor(){
-		this.actions =[];
+		this.controllers =[];
 	}
-	resigter(name,action){
-		if(this.actions.find((x)=>x.name===name)!=undefined){
+	register(name,action){
+		if(this.controllers.find((x)=>x.name===name)!==undefined){
 			throw new Error("action is in actions");
 		}
-		this.actions.push({
+		this.controllers.push({
 			action:action,
 			name:name
 		});
 	}
-	getAction(name){
-		return this.actions.find((x)=>x.name===name);
+	getController(name){
+		return this.controllers.find((x)=>x.name===name);
 	}
 }
-let holder = new controllerHolder();
-class center{
+let holder = new ControllerHolder();
+class Center{
 	constructor(){
-		this.acceptors =[];
+		this.components =[];
 	}
-	resigter(name,_this){
-		if(this.acceptors.findIndex((x)=>x.name===name)!=-1){
+	register(name,_this){
+		if(this.components.findIndex((x)=>x.name===name)!==-1){
 			throw new Error("acceptor is in acceptors");
 		}
-		this.acceptors.push({name:name,context:_this});
+		this.components.push({name:name,context:_this});
 		this.dispatch(name,"init");
 	}
 	remove(name){
 		this.dispatch(name,'destory');
-		this.acceptors.filter((x)=>x.name!=name);
+		this.components = this.components.filter((x)=>x.name!==name);
 	}
 	dispatch(name,action,rest){
-		let callback = holder.getAction(name)
-		if(callback!=undefined){
-			let acceptor = this.acceptors.find((x)=>x.name===name);
-			if(acceptor!=undefined){
-				callback.action(action,acceptor.context,center,rest);
-			}
+		let controller = holder.getController(name)
+		let component = this.components.find((x)=>x.name===name);
+		if(controller!==undefined&&component!==undefined){
+			controller.action(action,component.context,center,rest);
 		}
 	}
 }
-class controllerFactory{
+class ControllerFactory{
 	constructor(){
-	 	this.cotrollers = [];
+	 	this.controllers = [];
 	}
 	createOne(name){
-		let obj = new Object();
+		let obj = {};
 		obj._name = name;
 		obj._callback = [];
 		obj.register = function(name,callback){
@@ -55,23 +53,26 @@ class controllerFactory{
 				doit:callback
 			})
 		}
-		holder.resigter(name,(_name,_this,center,rest)=>{
+		holder.register(name,(_name,_this,center,rest)=>{
 			let callback = obj._callback.find((x)=>x.actionName===_name);
 			if(callback!==undefined){
 				callback.doit(_this,center,rest);
 			}
 		});
-		this.cotrollers.push(obj);
+		this.controllers.push(obj);
 		return obj;
 	}
 	destoryOne(name){
-		let  needDestory = this.cotrollers.find((x)=>x._name=name);
-		if(needDestory!=undefined){
-			this.cotrollers =  this.controllers.filter((x)=>!x._name===name)
+		let  needDestory = this.controllers.find((x)=>x._name=name);
+		if(needDestory!==undefined){
+			this.controllers =  this.controllers.filter((x)=>!x._name===name)
 			//delete needDestory;
 		}
 	}
 }
-let centers = new center();
-let factory = new controllerFactory();
-export {centers,factory};
+let center = new Center();
+let factory = new ControllerFactory();
+export {center,factory};
+
+
+

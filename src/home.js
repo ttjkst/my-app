@@ -1,7 +1,7 @@
 import React from 'react';
 //import '../common/foo.js';
 import {ModalHeader,ModalBody,ModalWithCloseButton} from './modal.js';
-import {centers as center} from './controller.js';
+import {center} from './controller.js';
 import './foo.js';
 import './homeAction.js';
 class  LoginFrom extends React.Component{
@@ -13,7 +13,7 @@ class  LoginFrom extends React.Component{
 		}
 	}
 	componentDidMount(){
-		center.resigter("LoginFrom",this);
+		center.register("LoginFrom",this);
 	}
 	componentDidUnMount(){
 		center.remove("LoginFrom");
@@ -46,7 +46,7 @@ class Modal extends React.Component{
 		}
 	}
 	componentDidMount(){
-		center.resigter("modal",this);
+		center.register("modal",this);
 	}
 	componentDidUnMount(){
 		center.remove("modal");
