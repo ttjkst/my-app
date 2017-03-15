@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './home.js';
-ReactDOM.render(<Home/>,
-		document.getElementById('root')
+import {Modal,Root} from './home.js';
+ReactDOM.render(<Modal/>,
+		document.getElementById('modal')
 		)
+ReactDOM.render(<Root/>,
+		document.getElementById('root')
+)

@@ -1,11 +1,46 @@
 import React from 'react';
 //import '../common/foo.js';
-import {ModalHeader,ModalBody,ModalWithCloseButton} from './common/modal.js';
+import {ModalHeader,ModalBody,ModalWithCloseButton} from './modal.js';
 import {center} from './controller.js';
 import './foo.js';
 import './homeAction.js';
 import {NavBarHeader,NavBar} from './head.js'
-//class TitelTab = 
+import 'lib-source/css/mine/mycss.css'
+class HeaderTabs extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			tabDatas:[
+            {key:1,	text:"首页",			css:""},{key:2,	text:"关于本站与我",	css:""},
+            {key:3,	text:"编程之外",		css:""},{key:4,	text:"编程与思考",	css:""}
+			]}
+	}
+	componentDidMount(){
+		center.register("HeaderTabs",this);
+	}
+	handleClick(e){
+		center.dispatch("HeaderTabs","handleClick",e);
+	}
+	render(){ 
+		const tabs = this.state.tabDatas.map(({key,css,text})=>{
+			return <li role="presentation" index={key}  className={css}><a onClick={this.handleClick} href="Javascript:void(0)">{text}</a></li>
+		}) 
+		return <div className="">
+				<ul className="nav navbar-nav" >
+					{tabs}
+				</ul>
+			</div>
+	}
+} 
+class Root extends React.Component{
+	render(){
+		return <NavBar>
+					<NavBarHeader>
+						<HeaderTabs/>
+					</NavBarHeader>
+			   </NavBar>
+	}
+}
 
 class  LoginFrom extends React.Component{
 	constructor(props){
@@ -66,4 +101,4 @@ class Modal extends React.Component{
 			</ModalWithCloseButton>
 	}
 }
-export default Modal;
+export {Modal,Root} ;
