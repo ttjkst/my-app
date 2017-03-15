@@ -1,6 +1,6 @@
 import React from 'react';
-import "../../lib-source/css/mine/mycss.css";
-import  buttom from "../../lib-source/img/buttom.jpg";
+import "./lib-source/css/mine/mycss.css";
+import  buttom from "./lib-source/img/buttom.jpg";
 
 var NavBarStyle={
 	backgroundImage: "url("+buttom+")"
