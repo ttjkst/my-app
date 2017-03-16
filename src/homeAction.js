@@ -43,15 +43,35 @@ headerController.register("init",(_this)=>{
 })
 headerController.register("handleClick",(_this,center,e)=>{
 	let tab = _this.state.tabDatas;
-	console.info(e)
-	for(let {key,text,css} of tab){
-		if(text===e.target.firstChild){
-			if(css!=="active"){
-				css="active"
+	let selected = e.target.firstChild.data;
+	let mainName = "firstWeb";
+	tab.forEach((x)=>{
+		if(x.text===selected){
+			if(x.css!=="active"){
+				x.css="active"
 			}
-			break;
+		}else{
+			x.css="";
 		}
-	}
-	console.info("触发了"+tab);
+	})
 	_this.setState({tabDatas:tab})
+	if(selected==="首页"){
+		mainName = "firstWeb";
+	}else if(selected==="关于本站与我"){
+		mainName = "secondWeb";
+	}else {
+		mainName = "other";
+	}
+	center.dispatch("main","changeMain",mainName);
+})
+let mainController = factory.createOne("main");
+mainController.register("init",(_this)=>{
+	_this.setState({
+		headTitle:"firstWeb"
+	})
+})
+mainController.register("changeMain",(_this,center,rest)=>{
+	_this.setState({
+		headTitle:rest
+	})
 })

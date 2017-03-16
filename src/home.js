@@ -18,12 +18,15 @@ class HeaderTabs extends React.Component{
 	componentDidMount(){
 		center.register("HeaderTabs",this);
 	}
+	componentWillUnmount(){
+		center.remove("HeaderTabs");
+	}
 	handleClick(e){
 		center.dispatch("HeaderTabs","handleClick",e);
 	}
 	render(){ 
 		const tabs = this.state.tabDatas.map(({key,css,text})=>{
-			return <li role="presentation" index={key}  className={css}><a onClick={this.handleClick} href="Javascript:void(0)">{text}</a></li>
+			return <li key={key} role="presentation"  className={css}><a  key={key} onClick={this.handleClick} href="Javascript:void(0)">{text}</a></li>
 		}) 
 		return <div className="">
 				<ul className="nav navbar-nav" >
@@ -53,7 +56,7 @@ class  LoginFrom extends React.Component{
 	componentDidMount(){
 		center.register("LoginFrom",this);
 	}
-	componentDidUnMount(){
+	componentWillUnmount(){
 		center.remove("LoginFrom");
 	}
 	changeUsername(e){
@@ -89,7 +92,7 @@ class Modal extends React.Component{
 	componentDidMount(){
 		center.register("modal",this);
 	}
-	componentDidUnMount(){
+	componentWillUnmount(){
 		center.remove("modal");
 	}
 	render(){
@@ -101,4 +104,66 @@ class Modal extends React.Component{
 			</ModalWithCloseButton>
 	}
 }
-export {Modal,Root} ;
+//main
+class  FirstWeb extends React.Component{
+		render(){
+					return <div className="jumbotron base_background">
+						<div className="container">
+							<h1>我</h1>
+							<p>有一个梦想</p>
+							<p>希望生活的喧嚣消失</p>
+							<p>自己不会茫然</p>
+						</div>
+					</div>
+		}
+	}
+class SceondWeb extends React.Component{
+	render(){
+		return 	(
+				<div className="base_background">
+					<div className="container">
+						<div className="thumbnail" style={{marginTop:"1%"}}>
+							<div className="caption" style={{marginBottom:"10%"}}>
+								<h1 className="text-center">关于本站与我</h1>
+								<div className="text-center">
+									<span className="glyphicon glyphicon-user">:ttjkst&nbsp;</span>
+									<span className="glyphicon glyphicon-time">:1991-11-22</span>
+								</div>
+								<p className="p1"><big>我是一名大学生，这是我的第一个网站。</big></p>
+								<p className="p1"><big>其实我也不知道说些什么。</big></p>
+								<p className="p1"><big>还是说说我最喜欢的栏目吧---"关于IT",这里我会放一些我自己学习记录。</big></p>
+								<p className="p1"><big>好了就这些。。以下是联系方式：</big></p>
+								<p className="p1"><big>我的邮箱：791599901@qq.com(请不要加qq联系我)</big></p>
+							</div>
+						</div>
+				</div>
+			</div>
+			)
+	}
+}
+class MainWeb extends React.Component{
+	constructor(props){
+		super(props);
+		this.state={
+			headTitle:"firstWeb"
+		}
+	}
+	componentDidMount(){
+		center.register("main",this);
+	}
+	componentWillUnmount(){
+		center.remove("main")
+	}
+	render(){
+		let result = (<FirstWeb/>);
+		let headTitle = this.state.headTitle;
+		if(headTitle==="firstWeb"){
+			result = (<FirstWeb/>);
+		}else if(headTitle==="secondWeb"){
+			result = (<SceondWeb/>);
+		}
+		console.info(result)
+		return result
+	}
+}
+export {Modal,MainWeb,Root} ;
