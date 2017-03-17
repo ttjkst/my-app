@@ -1,5 +1,5 @@
 import {factory} from './controller.js'
-//modal actions
+//modal controller
 let modalController = factory.createOne("modal");
 modalController.register("init",(_this,center)=>{
 	_this.setState({
@@ -11,7 +11,7 @@ modalController.register("closeModal",(_this)=>{
 		isShow:false
 	})
 })
-//loginfrom actions
+//loginfrom controller
 let  loginfromController = factory.createOne("LoginFrom");
 loginfromController.register("changeUsername",(_this,center,rest)=>{
 	console.info(_this);
@@ -31,7 +31,7 @@ loginfromController.register("clickLogin",(_this,center,rest)=>{
 	//调用 modal close action
 	center.dispatch("modal","closeModal");
 })
-//li actions
+//li controller
 let headerController = factory.createOne("HeaderTabs");
 headerController.register("init",(_this)=>{
 	_this.setState({
@@ -64,6 +64,7 @@ headerController.register("handleClick",(_this,center,e)=>{
 	}
 	center.dispatch("main","changeMain",mainName);
 })
+//mian  controller
 let mainController = factory.createOne("main");
 mainController.register("init",(_this)=>{
 	_this.setState({

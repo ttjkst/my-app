@@ -8,7 +8,7 @@ class  ControllerHolder{
 	}
 	register(name,action){
 		if(this.controllers.find((x)=>x.name===name)!==undefined){
-			throw new Error("action is in actions");
+			throw new Error("controller is in controllers");
 		}
 		this.controllers.push({
 			action:action,
@@ -94,6 +94,3 @@ class ControllerFactory{
 }
 let factory = new ControllerFactory();
 export {center,factory};
-
-
-
