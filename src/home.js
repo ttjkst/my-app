@@ -4,15 +4,16 @@ import {ModalHeader,ModalBody,ModalWithCloseButton} from './modal.js';
 import {center} from './controller.js';
 import './foo.js';
 import './homeAction.js';
-import {NavBarHeader,NavBar} from './head.js'
-import 'lib-source/css/mine/mycss.css'
+import {NavBarHeader,NavBar} from './head.js';
+import PageWeb from './pageWeb.js';
+import './lib-source/css/mine/mycss.css'
 class HeaderTabs extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
 			tabDatas:[
             {key:1,	text:"首页",			css:""},{key:2,	text:"关于本站与我",	css:""},
-            {key:3,	text:"编程之外",		css:""},{key:4,	text:"编程与思考",	css:""}
+            {key:3,	text:"编程之外",		css:""}
 			]}
 	}
 	componentDidMount(){
@@ -24,23 +25,35 @@ class HeaderTabs extends React.Component{
 	handleClick(e){
 		center.dispatch("HeaderTabs","handleClick",e);
 	}
-	render(){ 
+	render(){
 		const tabs = this.state.tabDatas.map(({key,css,text})=>{
 			return <li key={key} role="presentation"  className={css}><a  key={key} onClick={this.handleClick} href="Javascript:void(0)">{text}</a></li>
-		}) 
-		return <div className="">
-				<ul className="nav navbar-nav" >
-					{tabs}
-				</ul>
-			</div>
+		})
+		return(
+						<ul className="nav navbar-nav" >
+							{tabs}
+						</ul>
+					)
 	}
-} 
+}
 class Root extends React.Component{
 	render(){
 		return <NavBar>
 					<NavBarHeader>
 						<HeaderTabs/>
+
 					</NavBarHeader>
+
+					<div className="input-group">
+						<form className="form-group  navbar-left">
+							<div className="input-group">
+								<input type="text" className="form-control" placeholder="Search" />
+									<span className="input-group-btn">
+										<button className="btn btn-default" type="button">Search!</button>
+									</span>
+							</div>
+						</form>
+					</div>
 			   </NavBar>
 	}
 }
@@ -141,6 +154,13 @@ class SceondWeb extends React.Component{
 			)
 	}
 }
+class Other extends React.Component{
+	render(){
+		return <div>
+
+		</div>
+	}
+}
 class MainWeb extends React.Component{
 	constructor(props){
 		super(props);
@@ -161,6 +181,8 @@ class MainWeb extends React.Component{
 			result = (<FirstWeb/>);
 		}else if(headTitle==="secondWeb"){
 			result = (<SceondWeb/>);
+		}else{
+			result =<PageWeb/>
 		}
 		console.info(result)
 		return result

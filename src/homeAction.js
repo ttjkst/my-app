@@ -36,8 +36,8 @@ let headerController = factory.createOne("HeaderTabs");
 headerController.register("init",(_this)=>{
 	_this.setState({
 		tabDatas:[
-		{key:1,	text:"首页",			css:"active"},{key:2,	text:"关于本站与我",	css:""},
-        {key:3,	text:"编程之外",		css:""		},{key:4,	text:"编程与思考",	css:""}
+		{key:1,	text:"首页",			css:""},{key:2,	text:"关于本站与我",	css:""},
+        {key:3,	text:"bolg",		css:"active"		}
         ]
 	})
 })
@@ -60,15 +60,16 @@ headerController.register("handleClick",(_this,center,e)=>{
 	}else if(selected==="关于本站与我"){
 		mainName = "secondWeb";
 	}else {
-		mainName = "other";
+		mainName = "bolg";
 	}
+	//
 	center.dispatch("main","changeMain",mainName);
 })
 //mian  controller
 let mainController = factory.createOne("main");
 mainController.register("init",(_this)=>{
 	_this.setState({
-		headTitle:"firstWeb"
+		headTitle:"bolg", //"firstWeb"
 	})
 })
 mainController.register("changeMain",(_this,center,rest)=>{

@@ -14,7 +14,7 @@ class NavBar extends React.Component{
 	       		<div className="page-header">
 					 	<h1>ttjkst</h1>
 					 	<h4>Hard work and lean,try to make mistakes and try to correct it!</h4>
-				</div> 
+				</div>
 	       		{children}
 			</div>
 		</nav>
