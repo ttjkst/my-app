@@ -1,16 +1,31 @@
 import React from 'react';
+import {center} from './controller.js';
+let pageContextNum = 0
 class  PageContext extends React.Component {
   constructor(props) {
       super(props);
       this.state={
-
+          content:"Basic panel example"
       }
+      this.id = pageContextNum++;
+  }
+  componentDidMount(){
+      center.register("pageContext"+pageContextNum,this.id);
+      pageContextNum++;
+  }
+  componentWillUnmount(){
+    center.remove(this.id);
+  }
+  handleClick(){
   }
   render(){
     return   <div className="panel panel-info">
               <div className="panel-title"><h3>this is title !</h3></div>
               <div className="panel-body">
-                Basic panel example
+                {this.state.content}
+              </div>
+              <div className="panel-footer">
+                <button type="button" className="btn btn-info" onClick={center.showMore.bind(this)} >展开</button>
               </div>
             </div>
   }

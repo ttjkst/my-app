@@ -65,7 +65,7 @@ headerController.register("handleClick",(_this,center,e)=>{
 	//
 	center.dispatch("main","changeMain",mainName);
 })
-//mian  controller
+//main  controller
 let mainController = factory.createOne("main");
 mainController.register("init",(_this)=>{
 	_this.setState({
@@ -75,5 +75,11 @@ mainController.register("init",(_this)=>{
 mainController.register("changeMain",(_this,center,rest)=>{
 	_this.setState({
 		headTitle:rest
+	})
+})
+factory.createRealFunction("showMore",function(){
+	this.setState({
+		content:"sasasdkjashdasdkjasjldkasjdlkajdklasjdklasjdlkajdlkasjdlkasdjaklsjdaklsdjaslkdjaklsdjalskdjaslkdjasl"
+		+"kdjaskldjaslkdjalskdjasd"
 	})
 })

@@ -41,19 +41,7 @@ class Root extends React.Component{
 		return <NavBar>
 					<NavBarHeader>
 						<HeaderTabs/>
-
 					</NavBarHeader>
-
-					<div className="input-group">
-						<form className="form-group  navbar-left">
-							<div className="input-group">
-								<input type="text" className="form-control" placeholder="Search" />
-									<span className="input-group-btn">
-										<button className="btn btn-default" type="button">Search!</button>
-									</span>
-							</div>
-						</form>
-					</div>
 			   </NavBar>
 	}
 }

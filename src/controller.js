@@ -18,6 +18,9 @@ class  ControllerHolder{
 	getController(name){
 		return this.controllers.find((x)=>x.name===name);
 	}
+	getControllerByFilter(callback){
+		return this.controllers.filter(callback);
+	}
 }
 let holder = new ControllerHolder();
 class Center{
@@ -42,6 +45,16 @@ class Center{
 			controller.action(action,contextMap.context,this,rest);
 		}
 	}
+	dispatchFilter(callback,action,rest){
+		let controllers =  holder.getControllerByFilter(callback);
+		controllers.forEach((controller)=>{
+				let name = controller.name;
+				let contextMap = this.contexMaps.find((x)=>x.name===name);
+				if(controller!==undefined&&contextMap!==undefined){
+					controller.action(action,contextMap.context,this,rest);
+				}
+		})
+	}
 	dispatchLazy(name,action,rest){
 		holder.storeWillDo({
 			name:name,
@@ -54,6 +67,14 @@ let center = new Center();
 class ControllerFactory{
 	constructor(){
 	 	this.controllers = [];
+	}
+	createRealFunction(name,callback){//create a function by name and register in center;
+		if(center[name]===undefined){
+			center[name]= callback;
+			return center.name;
+		}else{
+			throw new Error("the function has  register in center");
+		}
 	}
 	createOne(name){
 		let obj = {};
@@ -84,7 +105,7 @@ class ControllerFactory{
 		this.controllers.push(obj);
 		return obj;
 	}
-	destoryOne(name){
+	destoryOne(name){//destory a controller
 		let  needDestory = this.controllers.find((x)=>x._name=name);
 		if(needDestory!==undefined){
 			this.controllers =  this.controllers.filter((x)=>!x._name===name)
