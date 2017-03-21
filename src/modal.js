@@ -14,7 +14,7 @@ class ModalHeader extends React.Component {
 	}
 	render(){
 		const  {children,showX} = this.props;
-		return( 
+		return(
 			<div className='modal-header'>
 				{this.getX(showX)}
 				{children}
@@ -25,11 +25,9 @@ class ModalHeader extends React.Component {
 class ModalBody extends React.Component{
 	render(){
 		const {children} = this.props;
-		console.info(this.props);
-		console.info(this);
 		return (
 			  <div className="modal-body">
-				    {children}  
+				    {children}
 			  </div>
 		)
 	}
@@ -41,7 +39,7 @@ class ModalWithCloseButton extends React.Component{
 	}
 	shouldComponentUpdate(nextProps,nextState){
 		if(nextProps.show!==this.props.show){
-			$(this.refs.root).modal(nextProps.show);			
+			$(this.refs.root).modal(nextProps.show);
 		}
 		return false;
 	}
@@ -50,7 +48,7 @@ class ModalWithCloseButton extends React.Component{
 	}
 	render(){
 		const {children} = this.props;
-		
+
 		return (
 			<div className="modal fade" id="modalRoot" ref="root">
 				  <div className="modal-dialog">

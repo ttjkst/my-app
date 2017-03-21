@@ -20,7 +20,7 @@ class HeaderTabs extends React.Component{
 		center.register("HeaderTabs",this);
 	}
 	componentWillUnmount(){
-		center.remove("HeaderTabs");
+		center.cancel("HeaderTabs");
 	}
 	handleClick(e){
 		center.dispatch("HeaderTabs","handleClick",e);
@@ -58,7 +58,7 @@ class  LoginFrom extends React.Component{
 		center.register("LoginFrom",this);
 	}
 	componentWillUnmount(){
-		center.remove("LoginFrom");
+		center.cancel("LoginFrom");
 	}
 	changeUsername(e){
 		center.dispatch("LoginFrom","changeUsername",e.target.value);
@@ -94,7 +94,7 @@ class Modal extends React.Component{
 		center.register("modal",this);
 	}
 	componentWillUnmount(){
-		center.remove("modal");
+		center.cancel("modal");
 	}
 	render(){
 		return <ModalWithCloseButton show={this.state.isShow?'show':'hide'}>
@@ -160,7 +160,7 @@ class MainWeb extends React.Component{
 		center.register("main",this);
 	}
 	componentWillUnmount(){
-		center.remove("main")
+		center.cancel("main")
 	}
 	render(){
 		let result = (<FirstWeb/>);
@@ -172,7 +172,6 @@ class MainWeb extends React.Component{
 		}else{
 			result =<PageWeb/>
 		}
-		console.info(result)
 		return result
 	}
 }

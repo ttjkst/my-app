@@ -5,7 +5,8 @@ class  PageContext extends React.Component {
   constructor(props) {
       super(props);
       this.state={
-          content:"Basic panel example"
+          content:"Basic panel example",
+          show:true
       }
       this.id = pageContextNum++;
   }
@@ -14,18 +15,18 @@ class  PageContext extends React.Component {
       pageContextNum++;
   }
   componentWillUnmount(){
-    center.remove(this.id);
+    center.cancel("pageContext"+this.id);
   }
   handleClick(){
   }
   render(){
-    return   <div className="panel panel-info">
+    return   <div className="panel panel-info" style={{display:!this.state.show?"none":"run-in"}}>
               <div className="panel-title"><h3>this is title !</h3></div>
               <div className="panel-body">
                 {this.state.content}
               </div>
               <div className="panel-footer">
-                <button type="button" className="btn btn-info" onClick={center.showMore.bind(this)} >展开</button>
+                <button type="button" className="btn btn-info" >展开</button>
               </div>
             </div>
   }

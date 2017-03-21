@@ -7,20 +7,19 @@ modalController.register("init",(_this,center)=>{
 	})
 })
 modalController.register("closeModal",(_this)=>{
-	_this.setState({
+	this.setState({
 		isShow:false
 	})
 })
 //loginfrom controller
 let  loginfromController = factory.createOne("LoginFrom");
 loginfromController.register("changeUsername",(_this,center,rest)=>{
-	console.info(_this);
 	_this.setState({
 		username:rest
 	})
 })
 loginfromController.register("changePassword",(_this,center,rest)=>{
-	console.info(_this);
+	console.info(this);
 	_this.setState({
 		"password":rest
 	})
@@ -54,7 +53,7 @@ headerController.register("handleClick",(_this,center,e)=>{
 			x.css="";
 		}
 	})
-	_this.setState({tabDatas:tab})
+	this.setState({tabDatas:tab})
 	if(selected==="首页"){
 		mainName = "firstWeb";
 	}else if(selected==="关于本站与我"){
@@ -77,9 +76,18 @@ mainController.register("changeMain",(_this,center,rest)=>{
 		headTitle:rest
 	})
 })
-factory.createRealFunction("showMore",function(){
+/*factory.createRealFunction("showMore",function(){
 	this.setState({
 		content:"sasasdkjashdasdkjasjldkasjdlkajdklasjdklasjdlkajdlkasjdlkasdjaklsjdaklsdjaslkdjaklsdjalskdjaslkdjasl"
 		+"kdjaskldjaslkdjalskdjasd"
 	})
-})
+	center.dispatchFilter((x)=>{
+		return x.name.indexOf("pageContext")!==-1||x.name!=="pageContext"+this.id;
+	},"close")
+})*/
+
+//controllers
+/*let pageContextControllers = factory.create((x)=>x.name.indexOf("pageContext")!==-1);
+pageContextControllers.register("close",(_this,center,rest)=>{
+	_this.setState({show:false})
+})*/

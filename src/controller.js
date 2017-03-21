@@ -1,117 +1,96 @@
-class  ControllerHolder{
-	constructor(){
-		this.controllers =[];
-		this.willDos = [];
+class Controller{
+	constructor(name){
+		this._name = name
+		this._actions=[];
 	}
-	storeWillDo(willDo){
-		this.willDos.push(willDo);
-	}
-	register(name,action){
-		if(this.controllers.find((x)=>x.name===name)!==undefined){
-			throw new Error("controller is in controllers");
-		}
-		this.controllers.push({
-			action:action,
-			name:name
-		});
-	}
-	getController(name){
-		return this.controllers.find((x)=>x.name===name);
-	}
-	getControllerByFilter(callback){
-		return this.controllers.filter(callback);
-	}
-}
-let holder = new ControllerHolder();
-class Center{
-	constructor(){
-		this.contexMaps =[];
-	}
-	register(name,_this){
-		if(this.contexMaps.findIndex((x)=>x.name===name)!==-1){
-			throw new Error("context is in contexts");
-		}
-		this.contexMaps.push({name:name,context:_this});
-		this.dispatch(name,"init");
-	}
-	remove(name){
-		this.dispatch(name,'destory');
-		this.contexMaps = this.contexMaps.filter((x)=>x.name!==name);
-	}
-	dispatch(name,action,rest){
-		let controller = holder.getController(name)
-		let contextMap = this.contexMaps.find((x)=>x.name===name);
-		if(controller!==undefined&&contextMap!==undefined){
-			controller.action(action,contextMap.context,this,rest);
-		}
-	}
-	dispatchFilter(callback,action,rest){
-		let controllers =  holder.getControllerByFilter(callback);
-		controllers.forEach((controller)=>{
-				let name = controller.name;
-				let contextMap = this.contexMaps.find((x)=>x.name===name);
-				if(controller!==undefined&&contextMap!==undefined){
-					controller.action(action,contextMap.context,this,rest);
-				}
-		})
-	}
-	dispatchLazy(name,action,rest){
-		holder.storeWillDo({
-			name:name,
-			action:action,
-			args:rest
+	addAction(name,callback){
+		this._actions.push({
+			_name:name,
+			_callback:callback
 		})
 	}
 }
-let center = new Center();
+//need remove function???
 class ControllerFactory{
 	constructor(){
-	 	this.controllers = [];
-	}
-	createRealFunction(name,callback){//create a function by name and register in center;
-		if(center[name]===undefined){
-			center[name]= callback;
-			return center.name;
-		}else{
-			throw new Error("the function has  register in center");
-		}
+		this.controllers = [];
+		//follow not need ?
+		this.willCreateControllers = [];
+		this.hasCreatedControllers = [];
 	}
 	createOne(name){
 		let obj = {};
-		obj._name = name;
-		obj._callback = [];
+		obj._controller =  new Controller(name);
 		obj.register = function(name,callback){
-			this._callback.push({
-				actionName:name,
-				doit:callback
-			})
-			let contextMap = center.contexMaps.find((x)=>x.name===this._name);
-				for(let {controllerName,action,args} of holder.willDos){
-					if(controllerName===obj._name){
-						if(action===name){
-							if(contextMap!==undefined){
-								callback(contextMap.context,center,args);
-							}
-						}
-					}
-				}
+			 	this._controller.addAction(name,callback);
 		}
-		holder.register(name,(_name,_this,center,rest)=>{
-			let callback = obj._callback.find((x)=>x.actionName===_name);
-			if(callback!==undefined){
-				callback.doit(_this,center,rest);
-			}
-		});
 		this.controllers.push(obj);
 		return obj;
 	}
-	destoryOne(name){//destory a controller
-		let  needDestory = this.controllers.find((x)=>x._name=name);
-		if(needDestory!==undefined){
-			this.controllers =  this.controllers.filter((x)=>!x._name===name)
-			//delete needDestory;
+	//no need??
+	createWitchCenterRegister(filter){
+		let obj ={};
+		obj._filter = filter;
+		obj._actions = [];
+		obj.resgister = function(name,callback){
+			this._actions.push({
+				_name:name,
+				_callback:callback
+			})
 		}
+		this.willCreateControllers.push(obj);
+		return obj;
 	}
 }
-let factory = new ControllerFactory();
+let  factory = new ControllerFactory();
+//
+class Center{
+		constructor(){
+				this._these = [];
+		}
+		register(controllerName,_this){
+			console.log("register  controller:"+controllerName);
+			this._these.push({
+				_controllerName:controllerName,
+				_this:_this
+			})
+			this.dispatch(controllerName,"init");
+			return function (actionName){
+					this.dispatch(controllerName,actionName);
+			}
+		}
+		dispatch(controllerName,actionName,...rest){
+			let controllerWapper = factory.controllers.find((x)=>x._controller._name===controllerName)
+			let _thisWapper = this._these.find((x)=>x._controllerName===controllerName);
+			if(controllerWapper!==undefined&&_thisWapper!==undefined){
+				let action  = controllerWapper._controller._actions.find((x)=>x._name===actionName);
+				if(action!==undefined){
+					console.info(_thisWapper._this);
+					action._callback(_thisWapper._this,this,rest);
+				}
+			}
+		}
+		dispatchByFilter(controllerNameFilter,actionName,...rest){
+			let controllers = factory.controllers.filter((x)=>controllerNameFilter(x._controller._name))
+			controllers.forEach((x)=>{
+				let controller = x._controller;
+				let _this = this._these.find((y)=>y._controllerName===x._controller._name);
+				if(controller!==undefined&&_this!==undefined){
+					let action  = controller._actions.find((x)=>x._name===actionName);
+					if(action!==undefined){
+						 action._callback(this,rest).bind(_this)
+					}
+				}
+			})
+		}
+		//must need?
+		dispatchLazy(){
+
+		}
+		cancel(controllerName){
+			this._these = this._these.filter((x)=>x._controllerName!==controllerName)
+			console.log("remove  controller:"+controllerName);
+		}
+}
+let center = new Center();
 export {center,factory};
