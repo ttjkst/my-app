@@ -35,14 +35,14 @@ let headerController = factory.createOne("HeaderTabs");
 headerController.register("init",(_this)=>{
 	_this.setState({
 		tabDatas:[
-		{key:1,	text:"首页",			css:""},{key:2,	text:"关于本站与我",	css:""},
-        {key:3,	text:"bolg",		css:"active"		}
+				{key:1,	text:"首页",			css:"active"},{key:2,	text:"关于本站与我",	css:""},
+        {key:3,	text:"bolg",		css:""		}
         ]
 	})
 })
-headerController.register("handleClick",(_this,center,e)=>{
+headerController.register("handleClick",(_this,center,rest)=>{
 	let tab = _this.state.tabDatas;
-	let selected = e.target.firstChild.data;
+	let selected = rest[0].target.firstChild.data;
 	let mainName = "firstWeb";
 	tab.forEach((x)=>{
 		if(x.text===selected){
@@ -53,7 +53,7 @@ headerController.register("handleClick",(_this,center,e)=>{
 			x.css="";
 		}
 	})
-	this.setState({tabDatas:tab})
+	_this.setState({tabDatas:tab})
 	if(selected==="首页"){
 		mainName = "firstWeb";
 	}else if(selected==="关于本站与我"){
@@ -68,12 +68,12 @@ headerController.register("handleClick",(_this,center,e)=>{
 let mainController = factory.createOne("main");
 mainController.register("init",(_this)=>{
 	_this.setState({
-		headTitle:"bolg", //"firstWeb"
+		headTitle:"firstWeb", //"firstWeb"
 	})
 })
 mainController.register("changeMain",(_this,center,rest)=>{
 	_this.setState({
-		headTitle:rest
+		headTitle:rest[0]
 	})
 })
 /*factory.createRealFunction("showMore",function(){

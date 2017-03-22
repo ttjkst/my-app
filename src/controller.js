@@ -27,6 +27,9 @@ class ControllerFactory{
 		this.controllers.push(obj);
 		return obj;
 	}
+	remove(name){
+		this.controllers = this.controllers.filter((x)=>x._name!==name);
+	}
 	//no need??
 	createWitchCenterRegister(filter){
 		let obj ={};
@@ -70,15 +73,31 @@ class Center{
 				}
 			}
 		}
+		registerThenCreateActions(controllerName,_this,actions){
+			console.log("register  controller:"+controllerName);
+			this._these.push({
+				_controllerName:controllerName,
+				_this:_this
+			})
+			let controller = factory.createOne(controllerName);
+			for(let key in actions){
+				controller.register(key,actions[key]);
+			}
+			this.dispatch(controllerName,"init");
+			return function (actionName){
+					this.dispatch(controllerName,actionName);
+			}.bind(this);
+		}
 		dispatchByFilter(controllerNameFilter,actionName,...rest){
 			let controllers = factory.controllers.filter((x)=>controllerNameFilter(x._controller._name))
 			controllers.forEach((x)=>{
 				let controller = x._controller;
-				let _this = this._these.find((y)=>y._controllerName===x._controller._name);
-				if(controller!==undefined&&_this!==undefined){
+				let _thisWapper = this._these.find((y)=>y._controllerName===x._controller._name);
+				console.info(_thisWapper)
+				if(controller!==undefined&&_thisWapper!==undefined){
 					let action  = controller._actions.find((x)=>x._name===actionName);
 					if(action!==undefined){
-						 action._callback(this,rest).bind(_this)
+						 action._callback(_thisWapper._this,this,rest);
 					}
 				}
 			})

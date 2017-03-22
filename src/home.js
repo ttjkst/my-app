@@ -3,10 +3,13 @@ import React from 'react';
 import {ModalHeader,ModalBody,ModalWithCloseButton} from './modal.js';
 import {center} from './controller.js';
 import './foo.js';
+import $ from "jquery";
 import './homeAction.js';
 import {NavBarHeader,NavBar} from './head.js';
+import TransitionGroup from 'react-addons-css-transition-group';
 import PageWeb from './pageWeb.js';
 import './lib-source/css/mine/mycss.css'
+import './transition.css'
 class HeaderTabs extends React.Component{
 	constructor(props){
 		super(props);
@@ -107,8 +110,12 @@ class Modal extends React.Component{
 }
 //main
 class  FirstWeb extends React.Component{
+	componentDidMount(){
+		setTimeout(()=>$(this.refs.root).addClass("pagContext-enter-active"),1000);
+	}
 		render(){
-					return <div className="jumbotron base_background">
+					return (
+					<div ref='root' className="jumbotron base_background pagContext-enter">
 						<div className="container">
 							<h1>我</h1>
 							<p>有一个梦想</p>
@@ -116,6 +123,7 @@ class  FirstWeb extends React.Component{
 							<p>自己不会茫然</p>
 						</div>
 					</div>
+				)
 		}
 	}
 class SceondWeb extends React.Component{
