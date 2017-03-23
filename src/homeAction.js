@@ -35,7 +35,7 @@ let headerController = factory.createOne("HeaderTabs");
 headerController.register("init",(_this)=>{
 	_this.setState({
 		tabDatas:[
-				{key:1,	text:"首页",			css:"active"},{key:2,	text:"关于本站与我",	css:""},
+				{key:1,	text:"首页",			css:""},{key:2,	text:"关于本站与我",	css:"active"},
         {key:3,	text:"bolg",		css:""		}
         ]
 	})
@@ -68,7 +68,7 @@ headerController.register("handleClick",(_this,center,rest)=>{
 let mainController = factory.createOne("main");
 mainController.register("init",(_this)=>{
 	_this.setState({
-		headTitle:"firstWeb", //"firstWeb"
+		headTitle:"secondWeb", //"firstWeb"
 	})
 })
 mainController.register("changeMain",(_this,center,rest)=>{

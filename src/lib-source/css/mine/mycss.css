@@ -11,13 +11,13 @@
 .image-mycss_list{
 	max-width:180px;
 	max-height:320px;
-	width:expression(this.width>180?"180px":this.width); 
+	width:expression(this.width>180?"180px":this.width);
 	height:expression(this.height>320?"320px":this.height);
 }
-.image-mycss_cross{ 
-	max-width:320px; 
-	max-height:180px; 
-	width:expression(this.width>320?"320px":this.width); 
+.image-mycss_cross{
+	max-width:320px;
+	max-height:180px;
+	width:expression(this.width>320?"320px":this.width);
 	height:expression(this.height>180?"180px":this.height);
 }
 .p1{

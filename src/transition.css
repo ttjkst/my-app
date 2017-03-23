@@ -1,22 +1,17 @@
-.pagContext-enter {
+.context-enter {
   opacity: 0.01;
 }
 
-.pagContext-enter.pagContext-enter-active {
+.context-enter.context-enter-active {
   opacity: 1;
   transition: opacity 500ms ease-in;
-  -moz-transition: width 100s;	/* Firefox 4 */
-  -webkit-transition: width 100s;	/* Safari 和 Chrome */
-  -o-transition: width 100s;
 }
 
-
-
-.pagContext-leave {
+.context-leave {
   opacity: 1;
 }
 
-.pagContext-leave.pagContext-leave-active {
+.context-leave.context-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }

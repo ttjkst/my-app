@@ -6,7 +6,9 @@ import './foo.js';
 import $ from "jquery";
 import './homeAction.js';
 import {NavBarHeader,NavBar} from './head.js';
-import TransitionGroup from 'react-addons-css-transition-group';
+import {BasicAnimationBox} from './animations.js'
+import ReactTransitionGroup from 'react-addons-transition-group'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import PageWeb from './pageWeb.js';
 import './lib-source/css/mine/mycss.css'
 import './transition.css'
@@ -111,11 +113,10 @@ class Modal extends React.Component{
 //main
 class  FirstWeb extends React.Component{
 	componentDidMount(){
-		setTimeout(()=>$(this.refs.root).addClass("pagContext-enter-active"),1000);
 	}
 		render(){
 					return (
-					<div ref='root' className="jumbotron base_background pagContext-enter">
+					<div ref='root' className="jumbotron base_background">
 						<div className="container">
 							<h1>我</h1>
 							<p>有一个梦想</p>
@@ -127,6 +128,7 @@ class  FirstWeb extends React.Component{
 		}
 	}
 class SceondWeb extends React.Component{
+
 	render(){
 		return 	(
 				<div className="base_background">
@@ -170,17 +172,30 @@ class MainWeb extends React.Component{
 	componentWillUnmount(){
 		center.cancel("main")
 	}
+	componentDidEnter(){
+		console.log("begin...")
+	}
+	componentWillEnter(){
+		console.log("enter.....")
+	}
 	render(){
-		let result = (<FirstWeb/>);
+		let result = (<FirstWeb key={"1"}/>);
 		let headTitle = this.state.headTitle;
 		if(headTitle==="firstWeb"){
-			result = (<FirstWeb/>);
+			result = (<FirstWeb key={"1"}/>);
 		}else if(headTitle==="secondWeb"){
-			result = (<SceondWeb/>);
+			result = (<SceondWeb key={"2"}/>);
 		}else{
-			result =<PageWeb/>
+			result =<PageWeb key={"3"}/>
 		}
-		return result
+		return (
+			<ReactCSSTransitionGroup
+          transitionName="context"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
+				   {result}
+				 </ReactCSSTransitionGroup >
+			 )
 	}
 }
-export {Modal,MainWeb,Root} ;
+export {Modal,MainWeb,Root};
