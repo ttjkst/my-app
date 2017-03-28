@@ -38,7 +38,7 @@ class  PageContext extends React.Component {
                       +"感式是居会育儿师系夜有，实令供然正等我间，关虽有不内研什条在有：一我直！生去爱善，意保数分事把在家斯赛大想西光学充……线他亲爸为灵队？"
                       +"总是那学如；传从汽我戏然场其负：'人是由人合也环支施。服党路传球什光走人洲可光老有题，麽门持在先种红要艺海出门务望从？走知消家以乐色"
                       +"终时密有特的只远易夜变活成机是孩比气。才工力情。本格点师而背一过受！",
-                      actionState:"extend",
+                      actionState:"deploy",
                     })
                     center.dispatchByFilter((x)=>{return x.indexOf("pageContext")!==-1},"disappear",_this)
                   },
@@ -56,10 +56,28 @@ class  PageContext extends React.Component {
                   }
       })
       pageContextNum++;
+      switch (this.state.actionState) {
+        case "disapper":
+
+          break;
+        case "basic":
+            $(this.refs.footer).attr({"style":""});
+            $(this.refs.footer).prev();
+            break;
+        case "deploy":
+
+              break;
+        default:
+
+      }
+
   }
   componentWillUnmount(){
     center.cancel("pageContext"+this.id);
     factory.remove("pageContext"+this.id)
+  }
+  componentWillmount(){
+
   }
   render(){
     return (<div className="panel panel-info" style={this.state.actionState!=="disapper"?{}:{"display":"none"}} >
