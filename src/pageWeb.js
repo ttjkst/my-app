@@ -1,6 +1,7 @@
 import React from 'react';
 import {center,factory} from './controller.js';
 import QueueAnim from 'rc-queue-anim';
+import $ from 'jquery'
 import './lib-source/css/mine/mycss.css'
 let pageContextNum = 0;
 function FirstChild(props) {
@@ -18,10 +19,11 @@ class  PageContext extends React.Component {
       }
       this.id = pageContextNum++;
       this.dispatcher = null;
+      this.content = "Basic panel example";
   }
   componentDidMount(){
       this.dispatcher =  center.registerThenCreateActions("pageContext"+this.id,this,{
-        showMore:function(_this,center,...rest){
+        deploy:function(_this,center,...rest){
                     console.info(_this);
                     _this.setState({
                       content:"股生用他往要北官语？好不年党一去主印必海告眼案没个，"
@@ -50,27 +52,47 @@ class  PageContext extends React.Component {
                           return;
                         }else{
                           _this.setState({
-                            actionState:"disapper"
+                            actionState:"disapper",
                           })
                         }
-                  }
+                  },
+        basic:function(_this,center,rest){
+          _this.setState({
+            actionState:"basic",
+            content:_this.content
+          })
+        }
       })
       pageContextNum++;
-      switch (this.state.actionState) {
-        case "disapper":
+  }
+  componentDidUpdate(prevProps,prevState){
+    switch (this.state.actionState) {
+      case "disapper":
 
+        break;
+      case "basic":
+          $(this.refs.footer).prev().removeClass("pageMinHight");
+          console.info(prevState);
+          if(prevState.actionState!==undefined&&prevState.actionState==="deploy"){
+            console.log("sroll");
+            $('html, body').animate({
+                scrollTop: $(this.refs.footer).prev().prev().offset().top
+            }, 1000);
+          }
           break;
-        case "basic":
-            $(this.refs.footer).attr({"style":""});
-            $(this.refs.footer).prev();
-            break;
-        case "deploy":
+      case "deploy":
+          $(this.refs.footer).prev().addClass("pageMinHight noView");
+          $(this.refs.footer).prev().animate({
+            width:"100%",
+            opacity:"1"
+          },'slow',function(){
+            $(this.refs.footer).prev().removeClass("noView");
+            $(this.refs.footer).prev().removeAttr("style");
+          }.bind(this));
+          break;
+      default:
 
-              break;
-        default:
-
-      }
-
+    }
   }
   componentWillUnmount(){
     center.cancel("pageContext"+this.id);
@@ -82,11 +104,17 @@ class  PageContext extends React.Component {
   render(){
     return (<div className="panel panel-info" style={this.state.actionState!=="disapper"?{}:{"display":"none"}} >
               <div className="panel-title"><h3>this is title !</h3></div>
-              <div className="panel-body">
+              <div className="panel-body" >
                   {this.state.content}
               </div>
               <div className="panel-footer" ref ="footer">
-                <button type="button" className="btn btn-info" onClick ={()=>{this.dispatcher("showMore")}}>展开</button>
+                <button type="button" className="btn btn-info" onClick ={()=>{
+                return    this.state.actionState==="deploy"?center.dispatchByFilter((x)=>{
+                      return x.indexOf("pageContext")!==-1
+                    },"basic")
+                    :this.dispatcher("deploy");
+                }
+              }>{this.state.actionState==="deploy"?"收取":"展开"}</button>
               </div>
             </div>)
   }
