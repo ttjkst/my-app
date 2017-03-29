@@ -41,3 +41,9 @@
 .disappear{
 	display: none;
 }
+.pageMinHight{
+	min-height: 900px
+}
+.noView{
+	opacity:0;
+}

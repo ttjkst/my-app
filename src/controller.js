@@ -1,3 +1,4 @@
+let isDebug = false;
 class Controller{
 	constructor(name){
 		this._name = name
@@ -52,7 +53,9 @@ class Center{
 				this._these = [];
 		}
 		register(controllerName,_this){
+			if(isDebug){
 			console.log("register  controller:"+controllerName);
+			}
 			this._these.push({
 				_controllerName:controllerName,
 				_this:_this
@@ -68,12 +71,14 @@ class Center{
 			if(controllerWapper!==undefined&&_thisWapper!==undefined){
 				let action  = controllerWapper._controller._actions.find((x)=>x._name===actionName);
 				if(action!==undefined){
+					if(isDebug)
 					console.info(_thisWapper._this);
 					action._callback(_thisWapper._this,this,rest);
 				}
 			}
 		}
 		registerThenCreateActions(controllerName,_this,actions){
+			if(isDebug)
 			console.log("register  controller:"+controllerName);
 			this._these.push({
 				_controllerName:controllerName,
@@ -93,6 +98,7 @@ class Center{
 			controllers.forEach((x)=>{
 				let controller = x._controller;
 				let _thisWapper = this._these.find((y)=>y._controllerName===x._controller._name);
+				if(isDebug)
 				console.info(_thisWapper)
 				if(controller!==undefined&&_thisWapper!==undefined){
 					let action  = controller._actions.find((x)=>x._name===actionName);
@@ -108,6 +114,7 @@ class Center{
 		}
 		cancel(controllerName){
 			this._these = this._these.filter((x)=>x._controllerName!==controllerName)
+			if(isDebug)
 			console.log("remove  controller:"+controllerName);
 		}
 }
