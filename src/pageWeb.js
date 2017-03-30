@@ -6,7 +6,6 @@ import './lib-source/css/mine/mycss.css'
 let pageContextNum = 0;
 function FirstChild(props) {
   const childrenArray = React.Children.toArray(props.children);
-  console.info(props.children);
   return childrenArray[0] || null;
 }
 class  PageContext extends React.Component {
@@ -24,7 +23,6 @@ class  PageContext extends React.Component {
   componentDidMount(){
       this.dispatcher =  center.registerThenCreateActions("pageContext"+this.id,this,{
         deploy:function(_this,center,...rest){
-                    console.info(_this);
                     _this.setState({
                       content:"股生用他往要北官语？好不年党一去主印必海告眼案没个，"
                       +"了不大名子天明！子中亲树物，上一不总和生：不我一管的大我活料孩动中今我程童自男道更信四金明你更间说孩。是母人工持离以雄时！"
@@ -45,9 +43,7 @@ class  PageContext extends React.Component {
                     center.dispatchByFilter((x)=>{return x.indexOf("pageContext")!==-1},"disappear",_this)
                   },
         disappear:function(_this,center,rest){
-                          console.log(rest);
                         let other = rest[0];
-                        console.info(other);
                         if(other===_this){
                           return;
                         }else{
@@ -72,9 +68,7 @@ class  PageContext extends React.Component {
         break;
       case "basic":
           $(this.refs.footer).prev().removeClass("pageMinHight");
-          console.info(prevState);
           if(prevState.actionState!==undefined&&prevState.actionState==="deploy"){
-            console.log("sroll");
             $('html, body').animate({
                 scrollTop: $(this.refs.footer).prev().prev().offset().top
             }, 1000);
@@ -119,6 +113,101 @@ class  PageContext extends React.Component {
             </div>)
   }
 }
+class PageBarChildren extends React.Component{
+    constructor(props){
+      super(props)
+    }
+    getCssByActionState(){
+      if(this.props.actionState==="clicked"){
+        return "active";
+      }
+      else if(this.props.actionState==="disable")
+      {
+        return "disabled"
+      }
+      return "";
+    }
+    handleClick(){
+      if(this.props.actionState!=="disable"&&this.props.actionState!=="clicked"){
+
+      }
+    }
+    render(){
+      const {children} = this.props;
+      return  <li className={this.getCssByActionState()} onClick={this.handleClick}><a ref="a">{children}</a></li>
+    }
+}
+let  createPagetagList = function(totalPage,currNo,size){
+					let key = size/2+1;
+					let e=null;
+          let list = [];
+					let beginNo = currNo-key<=0?currNo:currNo-key;
+					let endNo = totalPage-currNo<=size-1?totalPage:beginNo+size-1;
+					if(beginNo>1){
+						e={"key":totalPage+1,"actionState":"disable","value":"..."};
+						list.push(e);
+					}
+
+					for(var i=beginNo;i<=endNo;i++){
+						e={"key":i,"actionState":i===currNo?"clicked":"","value":i};
+						list.push(e);
+					}
+
+					if(totalPage>endNo){
+						e={"key":totalPage+2,"actionState":"disable","value":"..."};
+						list.push(e);
+            e={"key":totalPage,"actionState":"","value":totalPage};
+						list.push(e);
+					}
+					return list;
+}
+let checkPageBarData = function(totalPage,currNo,size) {
+  if(totalPage<=0){
+    return false;
+  }
+  if(currNo>totalPage||currNo<=0){
+    return false;
+  }
+  if(size<=0){
+    return false;
+  }
+  return true;
+}
+class PageBar extends React.Component{
+  constructor(props){
+    super(props)
+  }
+  render(){
+    let pageNoList = [];
+    if(checkPageBarData(this.props.totalPage,this.props.currNo,this.props.size)){
+    pageNoList =  createPagetagList(this.props.totalPage,this.props.currNo,this.props.size).map(function(e){
+        return <PageBarChildren key={e.key} actionState={e.actionState}>{e.value}</PageBarChildren>
+      })
+    }
+
+  return (
+					<div className="text-center">
+								<nav>
+								  <ul className="pagination">
+								    <li id="parentPrevious">
+								      <a href="#" aria-label="Previous" className={""}>
+								        <span aria-hidden="true">«</span>
+								      </a>
+								    </li>
+								   		{pageNoList}
+								    <li id="parentNext">
+								      <a href="#" aria-label="Next"  className={""}>
+								        <span aria-hidden="true">»</span>
+								      </a>
+								    </li>
+								  </ul>
+							</nav>
+						</div>
+						)
+  }
+}
+
+
 class PageContexts extends React.Component{
     constructor(props){
       super(props)
@@ -133,11 +222,9 @@ class PageContexts extends React.Component{
       })
     }
       render(){
-        console.info(this.state.manys)
         let pageContexts =this.state.manys.map((key)=>{
           return    <PageContext key={key} />
         })
-        console.info(pageContexts);
         return <div className='container' style={{backgroundColor:"#e7e7e7"}}>
         <div className="input-group" style={{marginTop:"10px",marginBottom:"10px"}} >
           <input type="text" placeholder="输入你感兴趣的关键字" className="form-control" onChange={this.changeKey} value={this.state.key} name="key"/>
@@ -148,7 +235,9 @@ class PageContexts extends React.Component{
         <QueueAnim delay={300} className="queue-simple">
         {pageContexts}
         </QueueAnim>
+        <PageBar totalPage={100} currNo={7} size={6}></PageBar>
         </div>
       }
 }
+
 export default PageContexts;
