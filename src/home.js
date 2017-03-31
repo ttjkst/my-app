@@ -35,7 +35,7 @@ class HeaderTabs extends React.Component{
 			return <li key={key} role="presentation"  className={css}><a  key={key} onClick={this.handleClick} href="Javascript:void(0)">{text}</a></li>
 		})
 		return(
-						<ul className="nav navbar-nav" >
+						<ul className="nav navbar-nav" id="root" >
 							{tabs}
 						</ul>
 					)

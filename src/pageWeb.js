@@ -3,6 +3,7 @@ import {center,factory} from './controller.js';
 import QueueAnim from 'rc-queue-anim';
 import $ from 'jquery'
 import './lib-source/css/mine/mycss.css'
+import './pageWebAction.js'
 let pageContextNum = 0;
 function FirstChild(props) {
   const childrenArray = React.Children.toArray(props.children);
@@ -127,21 +128,22 @@ class PageBarChildren extends React.Component{
       }
       return "";
     }
-    handleClick(){
+    handleClick(e){
+      console.info(this.props)
       if(this.props.actionState!=="disable"&&this.props.actionState!=="clicked"){
-
+          center.dispatch("all-pageContexts","clickNo",e.target.firstChild.textContent)
       }
     }
     render(){
       const {children} = this.props;
-      return  <li className={this.getCssByActionState()} onClick={this.handleClick}><a ref="a">{children}</a></li>
+      return  <li  className={this.getCssByActionState()}><a href="#" onClick={this.handleClick.bind(this)}  >{children}</a></li>
     }
 }
 let  createPagetagList = function(totalPage,currNo,size){
 					let key = size/2+1;
 					let e=null;
           let list = [];
-					let beginNo = currNo-key<=0?currNo:currNo-key;
+					let beginNo = currNo-key<=0?1:currNo-key;
 					let endNo = totalPage-currNo<=size-1?totalPage:beginNo+size-1;
 					if(beginNo>1){
 						e={"key":totalPage+1,"actionState":"disable","value":"..."};
@@ -190,13 +192,13 @@ class PageBar extends React.Component{
 								<nav>
 								  <ul className="pagination">
 								    <li id="parentPrevious">
-								      <a href="#" aria-label="Previous" className={""}>
+								      <a href="#" aria-label="Previous" onClick={()=>center.dispatch("all-pageContexts","prev")} className={0===this.props.currNo?"disappear":""}>
 								        <span aria-hidden="true">«</span>
 								      </a>
 								    </li>
 								   		{pageNoList}
 								    <li id="parentNext">
-								      <a href="#" aria-label="Next"  className={""}>
+								      <a href="#" aria-label="Next"     onClick={()=>center.dispatch("all-pageContexts","next")}  className={this.props.totalPage===this.props.currNo?"disappear":""}>
 								        <span aria-hidden="true">»</span>
 								      </a>
 								    </li>
@@ -213,13 +215,22 @@ class PageContexts extends React.Component{
       super(props)
       this.state={
         manys:[1,2,3,4,5],
-        key:""
+        key:"",
+        totalPage:0,
+        currNo:0,
+        size:0,
       }
     }
     changeKey(e){
       this.setState({
         key:e.target.value
       })
+    }
+    componentDidMount(){
+      center.register("all-pageContexts",this);
+    }
+    componentWillUnmount(){
+      center.cancel("all-pageContexts")
     }
       render(){
         let pageContexts =this.state.manys.map((key)=>{
@@ -235,7 +246,7 @@ class PageContexts extends React.Component{
         <QueueAnim delay={300} className="queue-simple">
         {pageContexts}
         </QueueAnim>
-        <PageBar totalPage={100} currNo={7} size={6}></PageBar>
+        <PageBar totalPage={this.state.totalPage} currNo={this.state.currNo} size={this.state.size}></PageBar>
         </div>
       }
 }
