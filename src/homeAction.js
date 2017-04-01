@@ -1,16 +1,4 @@
 import {factory} from './controller.js'
-//modal controller
-let modalController = factory.createOne("modal");
-modalController.register("init",(_this,center)=>{
-	_this.setState({
-		isShow:false
-	})
-})
-modalController.register("closeModal",(_this)=>{
-	this.setState({
-		isShow:false
-	})
-})
 //loginfrom controller
 let  loginfromController = factory.createOne("LoginFrom");
 loginfromController.register("changeUsername",(_this,center,rest)=>{

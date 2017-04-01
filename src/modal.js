@@ -2,6 +2,7 @@ import React from 'react';
 import $ from "jquery";
 import "./lib-source/js/bootstrap/common/transition.js"
 import "./lib-source/js/bootstrap/modal/modal.js"
+import {center} from './controller.js';
 class ModalHeader extends React.Component {
 	getX(showX){
 		let isShow = showX===undefined?showX===null?true:false:false;
@@ -35,16 +36,21 @@ class ModalBody extends React.Component{
 class ModalWithCloseButton extends React.Component{
 	constructor(props){
 		super(props)
-		this.props = props;
+	}
+	handleModalAction(isShow){
+		setTimeout(()=>$(this.refs.root).modal(isShow===true?'show':'hide'),100);
+	}
+	componentDidMount(){
+		center.register("modal",this);
+	}
+	componentWillUnmount(){
+		center.cancel("modal");
 	}
 	shouldComponentUpdate(nextProps,nextState){
 		if(nextProps.show!==this.props.show){
 			$(this.refs.root).modal(nextProps.show);
 		}
 		return false;
-	}
-	componentDidMount(){
-		setTimeout(()=>$(this.refs.root).modal(this.props.show),1000);
 	}
 	render(){
 		const {children} = this.props;
