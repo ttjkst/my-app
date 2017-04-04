@@ -1,16 +1,30 @@
 import React from 'react';
-import ReactSummernote from 'react-summernote';
 import 'react-summernote/dist/react-summernote.css'; // import styles
 import $ from "jquery";
-import './lib-source/js/react-summernote/lang/summernote-zh-CN';
 import "./lib-source/js/bootstrap.min.js"
+import 'react-summernote/dist/react-summernote.js';
+import './lib-source/js/react-summernote/lang/summernote-zh-CN.js';
+class SummernoteBasic extends React.Component{
+  constructor(props){
+    super(props)
+  }
+  componentDidMount(){
+    setTimeout(()=>$(this.refs.root).summernote(this.props.options),1000);
+  }
+  componentDidUpdate(prevProps, prevState){
+
+  }
+  render(){
+    return <div ref="root">this.props.value</div>
+  }
+}
 class CreateEssayUI extends React.Component{
   onChange(){
 
   }
   render(){
     return (
-     <ReactSummernote
+     <SummernoteBasic
        value="Default value"
        options={{
          lang: 'ru-RU',

@@ -138,4 +138,4 @@ class MainWeb extends React.Component{
 			 )
 	}
 }
-export {Modal,MainWeb,Root};
+export {MainWeb,Root};
