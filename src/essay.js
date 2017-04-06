@@ -15,7 +15,7 @@ class SummernoteBasic extends React.Component{
 
   }
   render(){
-    return <div ref="root">this.props.value</div>
+    return <div ref="root">{this.props.value}</div>
   }
 }
 class CreateEssayUI extends React.Component{
@@ -39,6 +39,22 @@ class CreateEssayUI extends React.Component{
            ['insert', ['link', 'picture', 'video']],
            ['view', ['fullscreen', 'codeview']]
          ]
+         ,
+         callbacks:{
+           onImageUpload:function(files){
+             let data = new FormData(files[0]);
+             var xhr = new XMLHttpRequest();
+             xhr.open("post","http://localhost:1086/image/save/");
+             xhr.send(data);
+             xhr.onreadystatechange= function() {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                         let result = '';
+                         result += '<img src="' + 'http://localhost:1086/image/save/get?name='+xhr.responseText + '">';
+                         $(this).summernote('insertNode',result);
+                }
+             };
+           }
+         }//end with callbaks
        }}
        onChange={this.onChange}
      />
