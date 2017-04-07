@@ -9,13 +9,13 @@ class SummernoteBasic extends React.Component{
     super(props)
   }
   componentDidMount(){
-    setTimeout(()=>$(this.refs.root).summernote(this.props.options),1000);
+    setTimeout(()=>$("#root").summernote(this.props.options),1000);
   }
   componentDidUpdate(prevProps, prevState){
 
   }
   render(){
-    return <div ref="root">{this.props.value}</div>
+    return <div id="root" ref="root">{this.props.value}</div>
   }
 }
 class CreateEssayUI extends React.Component{
@@ -41,19 +41,37 @@ class CreateEssayUI extends React.Component{
          ]
          ,
          callbacks:{
-           onImageUpload:function(files){
-             let data = new FormData(files[0]);
+           onImageUpload:function(files,editor,welEditable){
+             let data = new FormData();
+             data.append("file",files[0]);
              var xhr = new XMLHttpRequest();
              xhr.open("post","http://localhost:1086/image/save/");
              xhr.send(data);
              xhr.onreadystatechange= function() {
                 if(xhr.readyState == 4 && xhr.status == 200) {
-                         let result = '';
-                         result += '<img src="' + 'http://localhost:1086/image/save/get?name='+xhr.responseText + '">';
-                         $(this).summernote('insertNode',result);
+                         let url = '';
+                         url += 'http://localhost:1086/image/get?name='+xhr.responseText;
+                           $("#root").summernote('insertImage',url);
+                          // $("#root").summernote('insertText', 'Hello, world')
                 }
-             };
+             }
            }
+          // $.ajax({
+          //      url: "http://localhost:1086/image/save/",
+          //      type: "post",
+          //      data:data,
+          //      dataType: "jsonp",
+          //      jsonp:"callback",
+          //      processData:false,
+          //      jsonpCallback:"callback",
+          //      success: function(data){
+          //          alert("data:" + data['function']);
+          //      }
+          //  });
+
+
+
+
          }//end with callbaks
        }}
        onChange={this.onChange}
