@@ -13,7 +13,7 @@
 // )
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Modal,Root} from './essay.js'
+import {Modal,Root} from './essay.js';
 import 'bootstrap/dist/css/bootstrap.css';
 // ReactDOM.render(<Modal/>,
 // 		document.getElementById('modal')
@@ -22,3 +22,4 @@ import 'bootstrap/dist/css/bootstrap.css';
 ReactDOM.render(<Root/>,
 		 		document.getElementById('root')
 )
+import './essayAction.js'
