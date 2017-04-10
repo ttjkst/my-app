@@ -36,18 +36,20 @@ class ModalBody extends React.Component{
 class ModalWithCloseButton extends React.Component{
 	constructor(props){
 		super(props)
-		this.isShow = props.isShow;
-	}S
+	}
 	handleModalAction(isShow){
 		setTimeout(()=>$(this.refs.root).modal(isShow===true?'show':'hide'),100);
 	}
 	componentDidMount(){
 		center.register(this.props.componentName,this);
+		setTimeout(()=>$(this.refs.root).modal(this.props.isShow===true?'show':'hide'),100);
+		this.isShow = this.props.isShow;
 		$(this.refs.root).on('hidden.bs.modal', function (e) {
 				this.isShow = false;
 		})
 	}
 	componentWillUnmount(){
+		$(this.refs.root).off('hidden.bs.modal')
 		center.cancel(this.props.componentName);
 	}
 	shouldComponentUpdate(nextProps,nextState){
@@ -55,7 +57,7 @@ class ModalWithCloseButton extends React.Component{
 			$(this.refs.root).modal(nextProps.isShow);
 			this.isShow = nextProps.isShow
 		}
-		return false;
+		return true;
 	}
 	render(){
 		const {children,componentName} = this.props;

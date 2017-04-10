@@ -8,6 +8,7 @@ import './lib-source/css/mine/mycss.css';
 import {center} from './controller.js';
 import './essayAction.js'
 import {ModalHeader,ModalBody,ModalWithCloseButton} from './modal.js';
+import PropTypes from 'prop-types';
 function guid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
@@ -15,7 +16,7 @@ function guid() {
     });
 }
 let findFatherComponentName =function(name){
-  return name.substr(0,name.lastIindexOf("."))
+  return name.substr(0,name.lastIndexOf("."))
 }
 class SummernoteBasic extends React.Component{
   constructor(props){
@@ -31,32 +32,46 @@ class SummernoteBasic extends React.Component{
 class ControlTags extends React.Component{
   constructor(props){
     super(props)
+    this.state={
+      inputTags:""
+    }
   }
   componentDidMount(){
-    center.register(this.pros.componentName,this)
+    center.register(this.context.ControlTagsComponentName,this)
   }
   componentWillUnmount(){
-    center.cancel(this.props.componentName)
+    center.cancel(this.context.ControlTagsComponentName)
   }
   addTages(name){
-    if(this.props.tags.find((x)=>x===name)==undefined){
-      console.info(findFatherComponentName(this.props.componentName));
+    if(this.context.tags.find((x)=>x===name)==undefined){
+      let father = findFatherComponentName(this.context.ControlTagsComponentName)
+      center.dispatch(father,'_innerAddTags',name)
+      this.setState({inputTags:""})
     }
   }
   render(){
     let key  = 1;
-    let tags = this.props.tags.map(function(e){
-      return <span key={key++} className="label label-default">{e}</span>
-    }.bind(key))
+    let tags = this.context.tags.map((tag)=>{
+      return <button key={key++} onClick={(e)=>{
+          let father = findFatherComponentName(this.context.ControlTagsComponentName)
+          center.dispatch(father,"_innerRemoveTags",tag)
+        }} className="btn btn-default label label-default">{tag+" x"}</button>
+    })
 
-    return <div className="pull-right">
+    return <div className="container">
         <h4>{tags}</h4>
-      <span className="glyphicon glyphicon-tags pull-right" aria-hidden="true" ></span>
-      <input id="tags" className="iput-buttom-line" type="text" name="tags" value="" />
-      <button className="btn btn-info" onClick={(e)=>this.addTages(e.target.value)}>添加一个tags</button>
+      <span className="glyphicon glyphicon-tags" aria-hidden="true" ></span>
+      <input id="tags" className="iput-buttom-line" type="text" onChange={(e)=>{
+          this.setState({inputTags:e.target.value})
+        }} name="tags" value={this.state.inputTags} />
+      <button className="btn btn-info" onClick={(e)=>this.addTages(this.state.inputTags)}>添加一个tags</button>
     </div>
   }
 }
+ControlTags.contextTypes = {
+  ControlTagsComponentName: PropTypes.string,
+  tags:PropTypes.array
+};
 class AddTagesModal extends React.Component{
   constructor(props){
     super(props)
@@ -66,12 +81,13 @@ class AddTagesModal extends React.Component{
       <ModalWithCloseButton componentName={this.props.componentName} isShow={this.props.isShow}>
   					<ModalHeader>添加tags</ModalHeader>
   					<ModalBody>
-              <ControlTags tags={this.props.tags} componentName={this.props.componentName+".controlTags"}></ControlTags>
+              <ControlTags></ControlTags>
   					</ModalBody>
   			</ModalWithCloseButton>
     )
   }
 }
+
 class Tags extends React.Component{
   constructor(props){
     super(props)
@@ -87,7 +103,10 @@ class Tags extends React.Component{
     return (
       <div className="pull-right">
           <h4>{tags}</h4>
-        <span className="glyphicon glyphicon-tags pull-right" aria-hidden="true" onClick={center.dispatch(this.props._componentName,"show")} ></span>
+        <span className="glyphicon glyphicon-tags pull-right" aria-hidden="true" onClick={()=>{
+            center.dispatch(this.props._componentName,"_showModal");
+          }
+          } ></span>
       </div>
     )
   }
@@ -106,6 +125,12 @@ class CreateEssayUI extends React.Component{
   onChange(){
 
   }
+  getChildContext() {
+   return {
+            tags: this.state.tags,
+            ControlTagsComponentName:this.props.componentName+".controlTags"
+          };
+ }
   handleTitleChange(){
 
   }
@@ -113,7 +138,13 @@ class CreateEssayUI extends React.Component{
       center.registerThenCreateActions(this.props.componentName,this,{
           _innerAddTags:function(_this,center,rest){
             let orgTags = _this.state.tags;
-            let newTags = orgTags.add(rest);
+            let newTags = orgTags.concat(rest);
+            _this.setState({tags:newTags});
+          },
+          _innerRemoveTags:function(_this,center,rest){
+            let neeDeleteTage = rest[0];
+            let orgTags = _this.state.tags;
+            let newTags = orgTags.filter((x)=>x!==neeDeleteTage);
             _this.setState({tags:newTags});
           },
           _showModal:function(_this,center,rest){
@@ -127,7 +158,7 @@ class CreateEssayUI extends React.Component{
   render(){
     return (
       <div>
-        <AddTagesModal isShow={this.props.isShow} tags={this.state.tags} componentName={this.props.componentName+".addTagesModal"}></AddTagesModal>
+        <AddTagesModal isShow={this.state.isShow} tags={this.state.tags} componentName={this.props.componentName+".addTagesModal"}></AddTagesModal>
         <form>
           <h3 className="">
             <label htmlFor="title">标题:</label>
@@ -178,6 +209,10 @@ class CreateEssayUI extends React.Component{
    )
   }
 }
+CreateEssayUI.childContextTypes = {
+  ControlTagsComponentName: PropTypes.string,
+  tags:PropTypes.array
+};
 
 class Root extends React.Component{
   render(){
