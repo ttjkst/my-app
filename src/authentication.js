@@ -17,10 +17,14 @@ class  LoginFrom extends React.Component{
 		center.cancel("LoginFrom");
 	}
 	changeUsername(e){
-		center.dispatch("LoginFrom","changeUsername",e.target.value);
+			this.setState({
+				username:e.target.value
+			})
 	}
 	changePassword(e){
-		center.dispatch("LoginFrom","changePassword",e.target.value);
+		this.setState({
+			password:e.target.value
+		})
 	}
 	handleLogin(){
 		center.dispatch("LoginFrom","clickLogin");
@@ -29,11 +33,11 @@ class  LoginFrom extends React.Component{
 				return 		  <form>
 								    <div className="form-group">
 									      	<label  className="control-label"  >用户名：</label>
-									        <input  type="text" value={this.state.username} placeholder="请输入用户名"  onChange={this.changeUsername} className="form-control"/>
+									        <input  type="text" value={this.state.username} placeholder="请输入用户名"  onChange={(e)=>this.setState({username:e.target.value})} className="form-control"/>
 								       </div>
 								       <div className="form-group">
 									       	<label className="control-label" >密码：</label>
-									       	<input  type="password" value={this.state.password} placeholder="请输入密码" onChange={this.changePassword}  className="form-control" />
+									       	<input  type="password" value={this.state.password} placeholder="请输入密码" onChange={(e)=>this.setState({password:e.target.value})}  className="form-control" />
 								     	</div>
 								     	<button type="button" className="btn btn-primary" onClick={this.handleLogin} >登入</button>
 							     </form>
@@ -44,8 +48,8 @@ class Modal extends React.Component{
 		super(props);
 	}
 	render(){
-		return <ModalWithCloseButton>
-					<ModalHeader>Test Modal</ModalHeader>
+		return <ModalWithCloseButton isShow={true}  componentName={"AuthModal"}>
+					<ModalHeader>权限认证</ModalHeader>
 					<ModalBody>
 							<LoginFrom/>
 					</ModalBody>
@@ -56,7 +60,7 @@ class Warning extends React.Component{
   render(){
     return <div className="alert alert-warning" role="alert">权限不够！请点击旁边的按钮进行再次认证<button onClick={()=>{
       console.log("ss")
-      center.dispatch("modal","show")
+      center.dispatch("AuthModal","show")
     }} className="btn btn-info">@</button></div>
   }
 }

@@ -36,9 +36,11 @@ class ModalBody extends React.Component{
 class ModalWithCloseButton extends React.Component{
 	constructor(props){
 		super(props)
+		this.isShow = props.isShow||false;
 	}
 	handleModalAction(isShow){
 		setTimeout(()=>$(this.refs.root).modal(isShow===true?'show':'hide'),100);
+		this.isShow = isShow;
 	}
 	componentDidMount(){
 		center.register(this.props.componentName,this);

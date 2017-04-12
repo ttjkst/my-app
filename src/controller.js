@@ -83,6 +83,16 @@ class Center{
 					if(isDebug)
 					console.info(_thisWapper._this);
 					action._callback(_thisWapper._this,this,rest);
+				}else{
+						let willCreateControllerWapper = factory.willCreateControllers.find((x)=>x._controller._name===controllerName)
+						if(willCreateControllerWapper!==undefined&&_thisWapper!==undefined){
+							let action  = willCreateControllerWapper._controller._actions.find((x)=>x._name===actionName);
+							if(action!==undefined){
+								if(isDebug)
+								console.info(_thisWapper._this);
+								action._callback(_thisWapper._this,this,rest);
+							}
+						}
 				}
 			}else if(controllerWapper===undefined&&_thisWapper!==undefined){
 				let willCreateControllerWapper = factory.willCreateControllers.find((x)=>x._controller._name===controllerName)
