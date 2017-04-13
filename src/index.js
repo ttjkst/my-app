@@ -26,14 +26,14 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Modal,Root} from './authentication.js';
-import  "./authenticationAction.js"
+//import {Modal,Root} from './authentication.js';
+import {Nav} from "./navForManger.js"
+import {Modal,Root} from './essay.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './essayAction.js'
-ReactDOM.render(<Modal/>,
-		document.getElementById('modal')
+ReactDOM.render(<Nav/>,
+		document.getElementById('root')
 		)
-
 ReactDOM.render(<Root/>,
-		 		document.getElementById('root')
+		 		document.getElementById('main')
 )
