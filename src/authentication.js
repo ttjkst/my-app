@@ -59,7 +59,6 @@ class Modal extends React.Component{
 class Warning extends React.Component{
   render(){
     return <div className="alert alert-warning" role="alert">权限不够！请点击旁边的按钮进行再次认证<button onClick={()=>{
-      console.log("ss")
       center.dispatch("AuthModal","show")
     }} className="btn btn-info">@</button></div>
   }

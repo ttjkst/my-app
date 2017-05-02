@@ -6,7 +6,6 @@ import 'react-summernote/dist/react-summernote.js';
 import './lib-source/js/react-summernote/lang/summernote-zh-CN.js';
 import './lib-source/css/mine/mycss.css';
 import {center} from './controller.js';
-import './essayAction.js'
 import {ModalHeader,ModalBody,ModalWithCloseButton} from './modal.js';
 import PropTypes from 'prop-types';
 function guid() {
@@ -26,7 +25,7 @@ class SummernoteBasic extends React.Component{
     setTimeout(()=>$("#rootSummernoteBasic").summernote(this.props.options),10);
   }
   render(){
-    return <div id="rootSummernoteBasic" ref="root">{this.props.value}</div>
+    return <div id="rootSummernoteBasic" ref="root" dangerouslySetInnerHTML={{__html:this.props.value}} ></div>
   }
 }
 class ControlTags extends React.Component{
@@ -51,6 +50,7 @@ class ControlTags extends React.Component{
   }
   render(){
     let key  = 1;
+    console.info(this.context)
     let tags = this.context.tags.map((tag)=>{
       return <button key={key++} onClick={(e)=>{
           let father = findFatherComponentName(this.context.ControlTagsComponentName)
@@ -75,6 +75,7 @@ ControlTags.contextTypes = {
 class AddTagesModal extends React.Component{
   constructor(props){
     super(props)
+    console.info(this.context)
   }
   render(){
     return (
@@ -199,10 +200,12 @@ class CreateEssayUI extends React.Component{
                            $(this).summernote('insertImage',url);
                 }
              }
+           },
+           onChange: (contents)=>{
+             this.state.content = contents
            }
          }//end with callbaks
        }}
-       onChange={this.onChange}
      />
    <Tags tags={this.state.tags} _componentName={this.props.componentName} />
      </div>
@@ -214,7 +217,101 @@ CreateEssayUI.childContextTypes = {
   tags:PropTypes.array
 };
 
-class Root extends React.Component{
+class EditEssayUI extends React.Component{
+  constructor(props){
+    super(props)
+    this.state={
+      title:props.title,
+      author:props.author,
+      content:props.content,
+      tags:props.tags,
+    }
+  }
+  onChange(){
+
+  }
+  handleTitleChange(){
+
+  }
+  componentDidMount(){
+      center.registerThenCreateActions(this.props.componentName,this,{
+          _innerAddTags:function(_this,center,rest){
+            let orgTags = _this.state.tags;
+            let newTags = orgTags.concat(rest);
+            _this.setState({tags:newTags});
+          },
+          upate:this.props.updateAcion,
+          _innerRemoveTags:function(_this,center,rest){
+            let neeDeleteTage = rest[0];
+            let orgTags = _this.state.tags;
+            let newTags = orgTags.filter((x)=>x!==neeDeleteTage);
+            _this.setState({tags:newTags});
+          },
+          _showModal:this.props._showModal,
+          _update:this.props._update,
+          _delete:this.props._delete,
+      });
+  }
+  componentWillUnmount(){
+    center.cancel(this.props.componentName);
+  }
+  render(){
+    return (
+      <div>
+        <form>
+          <h3 className="">
+            <label htmlFor="title">标题:</label>
+            <input id="title" className="iput-buttom-line" type="text" onChange={(e)=>this.setState({title:e.target.value})} name="title" value={this.state.title}/>
+          </h3>
+          <div className="form-group">
+            <label htmlFor="author">作者:</label>
+            <input id="author" className="iput-buttom-line" type="text" name="author" onChange={(e)=>this.setState({author:e.target.value})} value={this.state.author}/>
+          </div>
+        </form>
+   <SummernoteBasic
+       value={this.state.content}
+       options={{
+         lang: 'zh-CN',
+         height: 350,
+         dialogsInBody: true,
+         toolbar: [
+           ['style', ['style']],
+           ['font', ['bold', 'underline', 'clear']],
+           ['fontname', ['fontname']],
+           ['para', ['ul', 'ol', 'paragraph']],
+           ['table', ['table']],
+           ['insert', ['link', 'picture']],
+           ['view', ['fullscreen', 'codeview']]
+         ]
+         ,
+         callbacks:{
+           onImageUpload:function(files){
+             let data = new FormData();
+             data.append("file",files[0]);
+             var xhr = new XMLHttpRequest();
+             xhr.open("post","http://localhost:1086/image/save/");
+             xhr.send(data);
+             xhr.onreadystatechange= function() {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                         let url = '';
+                         url += 'http://localhost:1086/image/get?name='+xhr.responseText;
+                           $(this).summernote('insertImage',url);
+                }
+             }
+           },
+           onChange: (contents)=>{
+             this.state.content = contents
+           }
+         }//end with callbaks
+       }}
+     />
+   <Tags tags={this.state.tags} _componentName={this.props.componentName} />
+     </div>
+   )
+  }
+}
+
+class CreateEssayUIWapper extends React.Component{
   render(){
     return (
       <div>
@@ -224,4 +321,4 @@ class Root extends React.Component{
     )
   }
 }
-export {Root};
+export {CreateEssayUIWapper,EditEssayUI};

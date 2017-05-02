@@ -46,7 +46,7 @@ class ModalWithCloseButton extends React.Component{
 		center.register(this.props.componentName,this);
 		setTimeout(()=>$(this.refs.root).modal(this.props.isShow===true?'show':'hide'),100);
 		this.isShow = this.props.isShow;
-		$(this.refs.root).on('hidden.bs.modal', function (e) {
+		$(this.refs.root).on('hidden.bs.modal',  (e)=> {
 				this.isShow = false;
 		})
 	}
@@ -55,7 +55,7 @@ class ModalWithCloseButton extends React.Component{
 		center.cancel(this.props.componentName);
 	}
 	shouldComponentUpdate(nextProps,nextState){
-		if(nextProps.show!==this.isShow){
+		if(nextProps.isShow!==this.isShow){
 			$(this.refs.root).modal(nextProps.isShow);
 			this.isShow = nextProps.isShow
 		}
@@ -64,7 +64,6 @@ class ModalWithCloseButton extends React.Component{
 	render(){
 		const {children,componentName} = this.props;
 		let Children = children;
-		console.info(this.props)
 		return (
 			<div className="modal fade" ref="root">
 				  <div className="modal-dialog">
